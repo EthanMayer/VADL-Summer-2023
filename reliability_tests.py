@@ -24,14 +24,36 @@ def read_temperature():
 # Reads CPU frequency from cmdline vcgencmd
 # frequency(48)=######### where # = some number, desired result can be between 9-10 characters long
 def read_frequency():
+    # ARM frequency is frequency of the processor
     str = popen("vcgencmd measure_clock arm").read()
+    freq = str[str.find("=")+1:-1] # trim to cut off frequency(48)=
+    print(str)
+
+    # Core frequency is frequency of the VPU/firmware/buses for peripherals
+    str = popen("vcgencmd measure_clock core").read()
     freq = str[str.find("=")+1:-1] # trim to cut off frequency(48)=
     print(str)
 
 # Reads Pi voltage from cmdline vcgencmd
 # volt=#.####V where # = some number, desired result always 4 characters long
 def read_voltage():
-    str = popen("vcgencmd measure_volts").read()
+    # Core voltage is voltage of CPU
+    str = popen("vcgencmd measure_volts core").read()
+    voltage = str[str.find("=")+1:-2] # trim to cut off volt= and V
+    print(str)
+
+    # sdram_c voltage is voltage of memory controller
+    str = popen("vcgencmd measure_volts sdram_c").read()
+    voltage = str[str.find("=")+1:-2] # trim to cut off volt= and V
+    print(str)
+
+    # sdram_i voltage is voltage of memory I/O
+    str = popen("vcgencmd measure_volts sdram_i").read()
+    voltage = str[str.find("=")+1:-2] # trim to cut off volt= and V
+    print(str)
+
+    # sdram_p voltage is voltage of physical memory
+    str = popen("vcgencmd measure_volts sdram_p").read()
     voltage = str[str.find("=")+1:-2] # trim to cut off volt= and V
     print(str)
 
@@ -47,7 +69,7 @@ start = datetime.now()
 while True:
     now = datetime.now()
     delt = now - start
-    print(str(delt.microseconds) + "READINGS:")
+    print(str(delt.microseconds) + " READINGS:")
     read_temperature()
     read_frequency()
     read_voltage()
