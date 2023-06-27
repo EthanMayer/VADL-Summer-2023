@@ -64,14 +64,22 @@ def read_throttle():
     throttle = str[str.find("x")+1:-1] # trim to cut off throttled=#x
     print(str)
 
+# Get current time to use as baseline
 start = datetime.now()
 
+# Run loop
 while True:
+    # Only record time since start (starts at 0, incrments)
     now = datetime.now()
     delt = now - start
-    print(str(delt.microseconds) + " READINGS:")
+
+    print(str(delt.microseconds / 1000.0) + " READINGS:")
+
+    # Perform all sensor readings
     read_temperature()
     read_frequency()
     read_voltage()
     read_throttle()
-    time.sleep(0.008)
+
+    # Sleep 1ms, but 34ms seems to be maximum frequency when just checking data
+    time.sleep(0.001)
