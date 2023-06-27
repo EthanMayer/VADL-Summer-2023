@@ -11,7 +11,7 @@ import time
 from csv import writer
 from datetime import datetime
 from datetime import timedelta
-from os import popen
+import os
 # from gpiozero import CPUTemperature
 
 # Reads CPU die temperature from cmdline vcgencmd
@@ -78,6 +78,8 @@ def append_list_as_row(write_obj, list_of_elem):
     csv_writer.writerow(list_of_elem)
 
 # Initialize CSV file for recording IMU data ########################################
+if not os.path.exists("../data"):
+    os.makedirs("../data")
 timestr = time.strftime("%Y%m%d-%H%M%S")
 file_name = "../data/LOG_" + timestr + ".StrainVoltage.csv"
 with open(file_name, 'w+', newline='') as file:
