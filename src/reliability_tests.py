@@ -80,7 +80,7 @@ def append_list_as_row(write_obj, list_of_elem):
 # Initialize CSV file for recording IMU data ########################################
 timestr = time.strftime("%Y%m%d-%H%M%S")
 file_name = "../data/LOG_" + timestr + ".StrainVoltage.csv"
-with open(file_name, 'w', newline='') as file:
+with open(file_name, 'w+', newline='') as file:
     new_file = writer(file)
     
 # Starts running the mission loop that continually checks data
