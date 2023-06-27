@@ -71,6 +71,25 @@ def read_throttle():
     # print(str)
     return throttle
 
+# Reads USB device status
+def read_usb():
+    str = popen("lsusb").read()
+    
+    # Expected USB devices to be listed as seen in lab testing
+    expected_usb = '''Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 025: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
+Bus 001 Device 024: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
+Bus 001 Device 023: ID 0c45:6366 Microdia Webcam Vitade AF
+Bus 001 Device 022: ID 2109:2817 VIA Labs, Inc. USB2.0 Hub
+Bus 001 Device 021: ID 0c45:6366 Microdia Webcam Vitade AF
+Bus 001 Device 015: ID 0403:6001 Future Technology Devices International, Ltd FT232 Serial (UART) IC
+Bus 001 Device 003: ID 0c45:6366 Microdia Webcam Vitade AF
+Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub'''
+
+    # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
+    return "".join(str.split()) == "".join(expected_usb.split())
+
 # Append a list as a row to the CSV
 def append_list_as_row(write_obj, list_of_elem):
     # Create a writer object from csv module
@@ -101,7 +120,7 @@ try:
 
             # Create list of all data for csv
             # [time, temp, throttle, arm freq, core freq, sdram_c voltage, sdram_i voltage, sdram_p voltage]
-            csvList = [delt.microseconds/1000.00, read_temperature(), read_throttle()]
+            csvList = [delt.microseconds/1000.00, read_usb(), read_temperature(), read_throttle()]
             csvList.extend(read_frequency())
             csvList.extend(read_voltage())
 
