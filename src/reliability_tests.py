@@ -11,7 +11,8 @@ import time
 from csv import writer
 from datetime import datetime
 from datetime import timedelta
-import os
+import os.path
+from os import popen
 # from gpiozero import CPUTemperature
 
 # Reads CPU die temperature from cmdline vcgencmd
