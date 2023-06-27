@@ -88,7 +88,7 @@ Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub'''
 
     # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
-    return "".join(str.split()) == "".join(expected_usb.split())
+    return int("".join(str.split()) == "".join(expected_usb.split()))
 
 # Append a list as a row to the CSV
 def append_list_as_row(write_obj, list_of_elem):
