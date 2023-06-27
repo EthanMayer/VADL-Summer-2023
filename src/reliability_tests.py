@@ -124,7 +124,7 @@ try:
 
             # Create list of all data for csv
             # [time, temp, throttle, arm freq, core freq, sdram_c voltage, sdram_i voltage, sdram_p voltage]
-            csvList = [str(delt.seconds) + "." + str(delt.microseconds * 1000.0), read_usb(), read_temperature(), read_throttle()]
+            csvList = [str(delt.seconds) + "." + str(round(delt.microseconds / 1000)), read_usb(), read_temperature(), read_throttle()]
             csvList.extend(read_frequency())
             csvList.extend(read_voltage())
 
