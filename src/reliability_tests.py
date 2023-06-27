@@ -110,6 +110,10 @@ try:
 
     # Open file in append mode
     with open(file_name, 'a+', newline='') as write_obj:
+        # Write column titles to csv
+        csvTitles = ["Time", "USB Status", "CPU Temperature", "Throttle Status", "CPU Frequency", "Core Frequency", "CPU Voltage", "Memory Controller Voltage", "Memory I/O Voltage", "Memory Chip Voltage"]
+        append_list_as_row(write_obj, csvTitles)
+
         # Get current time to use as baseline
         start = datetime.now()
 
@@ -125,13 +129,14 @@ try:
             csvList.extend(read_voltage())
 
             # Write list to csv
-            append_list_as_row(write_obj, csvList) 
+            append_list_as_row(write_obj, csvList)
 
             # Sleep 1ms, but 50ms seems to be maximum frequency when checking data + writing to csv
             time.sleep(0.001)
 except KeyboardInterrupt:
     print("Stopping logging due to keyboard interrupt") #ctrl-c
 
+#### Deprecated run loop for printing but may be used later by driver file
 
 # # Get current time to use as baseline
 # start = datetime.now()
