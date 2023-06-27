@@ -82,7 +82,7 @@ def append_list_as_row(write_obj, list_of_elem):
 if not os.path.exists("../data"):
     os.makedirs("../data")
 timestr = time.strftime("%Y%m%d-%H%M%S")
-file_name = "../data/LOG_" + timestr + ".StrainVoltage.csv"
+file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
 with open(file_name, 'w+', newline='') as file:
     new_file = writer(file)
     
@@ -108,10 +108,10 @@ try:
             # Write list to csv
             append_list_as_row(write_obj, csvList) 
 
-            # Sleep 1ms, but 34ms seems to be maximum frequency when just checking data
+            # Sleep 1ms, but 50ms seems to be maximum frequency when checking data + writing to csv
             time.sleep(0.001)
 except KeyboardInterrupt:
-    print("Stopping logging due to keyboard interrupt")
+    print("Stopping logging due to keyboard interrupt") #ctrl-c
 
 
 # # Get current time to use as baseline
