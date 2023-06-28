@@ -15,12 +15,12 @@ bcm2835-isp (platform:bcm2835-isp):
 	/dev/video21
 	/dev/video22
 	/dev/video23
+	/dev/media0
 	/dev/media1
-	/dev/media3
 
 rpivid (platform:rpivid):
 	/dev/video19
-	/dev/media0
+	/dev/media3
 
 Arducam USB Camera: Arducam USB (usb-0000:01:00.0-1.1):
 	/dev/video0
