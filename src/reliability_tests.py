@@ -123,8 +123,8 @@ def read_memory():
     # Convert Bytes to MB (Bytes -> KB -> MB)
     available = round(memory.available/1024.0/1024.0,1)
     total = round(memory.total/1024.0/1024.0,1)
-    percent = memory.percent
-    return [total, available, percent]
+    percent = str(memory.percent) + '%'
+    return [available, percent]
 
 ###### UNUSED
 # Reads disk usage information
@@ -134,7 +134,7 @@ def read_disk():
     # Convert Bytes to GB (Bytes -> KB -> MB -> GB)
     free = round(disk.free/1024.0/1024.0/1024.0,1)
     total = round(disk.total/1024.0/1024.0/1024.0,1)
-    percent = disk.percent
+    percent = str(disk.percent) + '%'
     return [free, percent]
 
 # Append a list as a row to the CSV
@@ -161,7 +161,7 @@ try:
     # Open file in append mode
     with open(file_name, 'a+', newline='') as write_obj:
         # Write column titles to csv
-        csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (Mb)"]
+        csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (%)"]
         append_list_as_row(write_obj, csvTitles)
 
         # Get current time to use as baseline
