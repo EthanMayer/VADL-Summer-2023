@@ -19,6 +19,7 @@ import psutil
 ####################################################################################
 # Global variables
 first = False # Initialize start flag for read_usb
+expected_usb = "" # Correct list of USB
 
 ####################################################################################
 # Functions
@@ -83,7 +84,7 @@ def read_throttle():
 def read_usb():
     global first
     str = popen("lsusb").read()
-    expected_usb = ""
+    global expected_usb
 
     # First time, check current USB devices and record them
     if not first:
@@ -134,7 +135,7 @@ def read_disk():
     free = round(disk.free/1024.0/1024.0/1024.0,1)
     total = round(disk.total/1024.0/1024.0/1024.0,1)
     percent = disk.percent
-    return [total, free, percent]
+    return [free, percent]
 
 # Append a list as a row to the CSV
 def append_list_as_row(write_obj, list_of_elem):
@@ -160,7 +161,7 @@ try:
     # Open file in append mode
     with open(file_name, 'a+', newline='') as write_obj:
         # Write column titles to csv
-        csvTitles = ["Time", "USB Status", "CPU Utilization", "CPU Temperature", "Throttle Status", "CPU Frequency", "Core Frequency", "CPU Voltage", "Memory Controller Voltage", "Memory I/O Voltage", "Memory Chip Voltage"]
+        csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (Mb)"]
         append_list_as_row(write_obj, csvTitles)
 
         # Get current time to use as baseline
