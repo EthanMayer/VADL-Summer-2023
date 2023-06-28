@@ -83,6 +83,7 @@ def read_throttle():
 def read_usb():
     global first
     str = popen("lsusb").read()
+    expected_usb = ""
 
     # First time, check current USB devices and record them
     if not first:
