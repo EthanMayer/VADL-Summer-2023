@@ -13,6 +13,7 @@ from datetime import datetime
 from datetime import timedelta
 import os.path
 from os import popen
+import psutil
 # from gpiozero import CPUTemperature
 
 # Reads CPU die temperature from cmdline vcgencmd
@@ -90,7 +91,31 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub'''
     # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
     return int("".join(str.split()) == "".join(expected_usb.split()))
 
-# TODO: def read_utilization():
+# Reads CPU utilization percentage
+def read_utilization():
+    # Get cpu statistics
+    cpu = str(psutil.cpu_percent()) + '%'
+    return cpu
+
+# Reads RAM information
+def read_memory():
+    memory = psutil.virtual_memory()
+    # Convert Bytes to MB (Bytes -> KB -> MB)
+    available = round(memory.available/1024.0/1024.0,1)
+    total = round(memory.total/1024.0/1024.0,1)
+    percent = memory.percent
+    return [total, available, percent]
+
+###### UNUSED
+# Reads disk usage information
+def read_disk():
+    # Calculate disk information
+    disk = psutil.disk_usage('/')
+    # Convert Bytes to GB (Bytes -> KB -> MB -> GB)
+    free = round(disk.free/1024.0/1024.0/1024.0,1)
+    total = round(disk.total/1024.0/1024.0/1024.0,1)
+    percent = disk.percent
+    return [total, free, percent]
 
 # Append a list as a row to the CSV
 def append_list_as_row(write_obj, list_of_elem):
@@ -113,7 +138,7 @@ try:
     # Open file in append mode
     with open(file_name, 'a+', newline='') as write_obj:
         # Write column titles to csv
-        csvTitles = ["Time", "USB Status", "CPU Temperature", "Throttle Status", "CPU Frequency", "Core Frequency", "CPU Voltage", "Memory Controller Voltage", "Memory I/O Voltage", "Memory Chip Voltage"]
+        csvTitles = ["Time", "USB Status", "CPU Utilization", "CPU Temperature", "Throttle Status", "CPU Frequency", "Core Frequency", "CPU Voltage", "Memory Controller Voltage", "Memory I/O Voltage", "Memory Chip Voltage"]
         append_list_as_row(write_obj, csvTitles)
 
         # Get current time to use as baseline
@@ -126,14 +151,15 @@ try:
 
             # Create list of all data for csv
             # [time, temp, throttle, arm freq, core freq, sdram_c voltage, sdram_i voltage, sdram_p voltage]
-            csvList = [str(delt.seconds) + "." + str(round(delt.microseconds / 1000)), read_usb(), read_temperature(), read_throttle()]
+            csvList = [str(delt.seconds) + "." + str(round(delt.microseconds / 1000)), read_usb(), read_temperature(), read_utilization(), read_throttle()]
             csvList.extend(read_frequency())
             csvList.extend(read_voltage())
+            csvList.extend(read_memory())
 
             # Write list to csv
             append_list_as_row(write_obj, csvList)
 
-            # Sleep 1ms, but 50ms seems to be maximum frequency when checking data + writing to csv
+            # Sleep 1ms, but 75ms seems to be maximum frequency when checking data + writing to csv
             time.sleep(0.001)
 except KeyboardInterrupt:
     print("Stopping logging due to keyboard interrupt") #ctrl-c
