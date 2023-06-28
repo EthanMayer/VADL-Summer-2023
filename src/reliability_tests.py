@@ -81,6 +81,7 @@ def read_throttle():
 
 # Reads USB device status
 def read_usb():
+    global first
     str = popen("lsusb").read()
 
     # First time, check current USB devices and record them
