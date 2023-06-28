@@ -90,6 +90,8 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub'''
     # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
     return int("".join(str.split()) == "".join(expected_usb.split()))
 
+# TODO: def read_utilization():
+
 # Append a list as a row to the CSV
 def append_list_as_row(write_obj, list_of_elem):
     # Create a writer object from csv module
