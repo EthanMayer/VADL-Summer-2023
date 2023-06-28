@@ -16,6 +16,13 @@ from os import popen
 import psutil
 # from gpiozero import CPUTemperature
 
+####################################################################################
+# Global variables
+first = False # Initialize start flag for read_usb
+
+####################################################################################
+# Functions
+
 # Reads CPU die temperature from cmdline vcgencmd
 # temp=##.#'C where # = some number, desired result always 4 characters long
 def read_temperature():
@@ -134,16 +141,16 @@ def append_list_as_row(write_obj, list_of_elem):
     # Add contents of list as last row in the csv file
     csv_writer.writerow(list_of_elem)
 
-# Initialize CSV file for recording IMU data ########################################
+####################################################################################
+# Script start
+
+# Initialize CSV file for recording IMU data
 if not os.path.exists("../data"):
     os.makedirs("../data")
 timestr = time.strftime("%Y%m%d-%H%M%S")
 file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
 with open(file_name, 'w+', newline='') as file:
     new_file = writer(file)
-
-# Initialize start flag for read_usb
-first = False
     
 # Starts running the mission loop that continually checks data
 try:
