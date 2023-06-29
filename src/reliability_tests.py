@@ -182,8 +182,8 @@ try:
             # Write list to csv
             append_list_as_row(write_obj, csvList)
 
-            # Sleep 1ms, but 75ms seems to be maximum frequency when checking data + writing to csv
-            time.sleep(0.001)
+            # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
+            time.sleep(0.1)
 except KeyboardInterrupt:
     print("Stopping logging due to keyboard interrupt") #ctrl-c
 
