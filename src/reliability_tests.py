@@ -14,7 +14,6 @@ from datetime import timedelta
 import os.path
 from os import popen
 import psutil
-# from gpiozero import CPUTemperature
 
 ####################################################################################
 # Global variables
@@ -24,7 +23,7 @@ expected_usb = "" # Correct list of USB
 ####################################################################################
 # Functions
 
-# Reads CPU die temperature from cmdline vcgencmd
+# Reads CPU die temperature from cmdline vcgencmd, accurate due to firmware-level request
 # temp=##.#'C where # = some number, desired result always 4 characters long
 def read_temperature():
     str = popen("vcgencmd measure_temp").read()
@@ -32,7 +31,7 @@ def read_temperature():
     #print(str)
     return temp
 
-# Reads CPU frequency from cmdline vcgencmd
+# Reads CPU frequency from cmdline vcgencmd, accurate due to firmware-level request
 # frequency(48)=######### where # = some number, desired result can be between 9-10 characters long
 def read_frequency():
     # ARM frequency is frequency of the processor
@@ -47,7 +46,7 @@ def read_frequency():
 
     return [freq_arm, freq_core]
 
-# Reads Pi voltage from cmdline vcgencmd
+# Reads Pi voltage from cmdline vcgencmd, accurate due to firmware-level request
 # volt=#.####V where # = some number, desired result always 4 characters long
 def read_voltage():
     # Core voltage is voltage of CPU
@@ -72,7 +71,7 @@ def read_voltage():
 
     return [voltage_core, voltage_sdramc, voltage_sdrami, voltage_sdramp]
 
-# Reads throttle status from cmdline vcgencmd
+# Reads throttle status from cmdline vcgencmd, accurate due to firmware-level request
 # throttled=#x# where # = some number (but little x always there because Hex), desired result always 3 characters long
 def read_throttle():
     str = popen("vcgencmd get_throttled").read()
@@ -81,6 +80,7 @@ def read_throttle():
     return throttle
 
 # Reads USB device status
+# Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test
 def read_usb():
     global first
     str = popen("lsusb").read()
@@ -126,7 +126,7 @@ def read_memory():
     percent = str(memory.percent) + '%'
     return [available, percent]
 
-###### UNUSED
+# UNUSED
 # Reads disk usage information
 def read_disk():
     # Calculate disk information
