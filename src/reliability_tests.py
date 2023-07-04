@@ -148,7 +148,7 @@ class reliability_tests:
         csv_writer.writerow(list_of_elem)
 
     # Starts test suite using functions above
-    def start_tests(self):
+    def start_tests(self, total_time):
 
         # Initialize CSV file for recording IMU data
         if not os.path.exists("../data"):
@@ -169,8 +169,9 @@ class reliability_tests:
 
                 # Get current time to use as baseline
                 start = datetime.now()
+                delt = timedelta(seconds=0)
 
-                while True:
+                while ((delt.seconds / 60) < total_time):
                     # Only record time since start (starts at 0, incrments)
                     now = datetime.now()
                     delt = now - start

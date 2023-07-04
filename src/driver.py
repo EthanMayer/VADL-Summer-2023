@@ -10,6 +10,8 @@ Copyright 2023. All rights reserved.
 import argparse
 import time
 from datetime import datetime
+import reliability_tests
+import subprocess
 
 # Handle command-line arguments
 parser = argparse.ArgumentParser()
@@ -23,7 +25,12 @@ parser.add_argument("-V", "--verbose", help = "Whether to print data to the term
 # CMDline argument for stress
 parser.add_argument("-S", "--stress", help = "Whether to stress the CPU, I/O, and Memory to 100%", action = "store_true")
 
+# Parse the provided arguments
 args = parser.parse_args()
 
-# Get current time
-now = datetime.now()
+# Create the test object
+tests = reliability_tests.reliability_tests()
+
+stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"])
+
+tests.start_tests(args.time)
