@@ -7,12 +7,13 @@ reliability_tests.py
 Copyright 2023. All rights reserved.
 '''
 
+
 import time
+from datetime import datetime, timedelta
 from csv import writer
-from datetime import datetime
-from datetime import timedelta
-import os.path
 from os import popen
+import os.path
+import sys
 import psutil
 
 # Reliability testing suite class
@@ -51,28 +52,31 @@ class reliability_tests:
 
     # Reads Pi voltage from cmdline vcgencmd, accurate due to firmware-level request
     # volt=#.####V where # = some number, desired result always 4 characters long
-    def read_voltage():
+    def read_voltage(verbose):
         # Core voltage is voltage of CPU
         str = popen("vcgencmd measure_volts core").read()
         voltage_core = str[str.find("=")+1:-2] # trim to cut off volt= and V
-        # print(str)
 
-        # sdram_c voltage is voltage of memory controller
-        str = popen("vcgencmd measure_volts sdram_c").read()
-        voltage_sdramc = str[str.find("=")+1:-2] # trim to cut off volt= and V
-        # print(str)
+        # If in verbose mode, only check and return voltage_core
+        if verbose:
+            return voltage_core
+        
+        # If not in verbose mode, check and return everything
+        else:
 
-        # sdram_i voltage is voltage of memory I/O
-        str = popen("vcgencmd measure_volts sdram_i").read()
-        voltage_sdrami = str[str.find("=")+1:-2] # trim to cut off volt= and V
-        # print(str)
+            # sdram_c voltage is voltage of memory controller
+            str = popen("vcgencmd measure_volts sdram_c").read()
+            voltage_sdramc = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
-        # sdram_p voltage is voltage of physical memory
-        str = popen("vcgencmd measure_volts sdram_p").read()
-        voltage_sdramp = str[str.find("=")+1:-2] # trim to cut off volt= and V
-        # print(str)
+            # sdram_i voltage is voltage of memory I/O
+            str = popen("vcgencmd measure_volts sdram_i").read()
+            voltage_sdrami = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
-        return [voltage_core, voltage_sdramc, voltage_sdrami, voltage_sdramp]
+            # sdram_p voltage is voltage of physical memory
+            str = popen("vcgencmd measure_volts sdram_p").read()
+            voltage_sdramp = str[str.find("=")+1:-2] # trim to cut off volt= and V
+
+            return [voltage_core, voltage_sdramc, voltage_sdrami, voltage_sdramp]
 
     # Reads throttle status from cmdline vcgencmd, accurate due to firmware-level request
     # throttled=#x# where # = some number (but little x always there because Hex), desired result always 3 characters long
@@ -148,50 +152,70 @@ class reliability_tests:
         csv_writer.writerow(list_of_elem)
 
     # Starts test suite using functions above
-    def start_tests(self, total_time):
+    def start_tests(self, total_time, verbose):
 
-        # Initialize CSV file for recording IMU data
-        if not os.path.exists("../data"):
-            os.makedirs("../data")
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
-        with open(file_name, 'w+', newline='') as file:
-            new_file = writer(file)
+        # Log normally if not verbose mode
+        if not verbose:
+
+            # Initialize CSV file for recording IMU data
+            if not os.path.exists("../data"):
+                os.makedirs("../data")
+            timestr = time.strftime("%Y%m%d-%H%M%S")
+            file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
+            open(file_name, 'w+', newline='')
+                
+            # Starts running the mission loop that continually checks data
+            try:
+
+                # Open file in append mode
+                with open(file_name, 'a+', newline='') as write_obj:
+                    # Write column titles to csv
+                    csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (%)"]
+                    self.append_list_as_row(write_obj, csvTitles)
+
+                    # Get current time to use as baseline
+                    start = datetime.now()
+                    delt = timedelta(seconds=0)
+
+                    # Only run for specified time
+                    while ((delt.seconds / 60) < total_time):
+                        # Only record time since start (starts at 0, incrments)
+                        now = datetime.now()
+                        delt = now - start
+
+                        # Create list of all data for csv
+                        # [time, temp, throttle, arm freq, core freq, sdram_c voltage, sdram_i voltage, sdram_p voltage]
+                        csvList = [str(delt.seconds) + "." + str(round(delt.microseconds / 1000)), self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle()]
+                        csvList.extend(self.read_frequency())
+                        csvList.extend(self.read_voltage())
+                        csvList.extend(self.read_memory())
+
+                        # Write list to csv
+                        self.append_list_as_row(write_obj, csvList)
+
+                        # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
+                        time.sleep(0.1)
+
+            # Stop logging on keyboard interrupt
+            except KeyboardInterrupt:
+                print("Stopping logging due to keyboard interrupt") #ctrl-c
+
+        # If in verbose mode, do not log and just print output (for observation)
+        else:
+
+            print("===============Reliability Tests===============")
+            print("USB Status\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\tCPU Frequency (hz)\tCore Frequency (hz)\tCPU Voltage (V)\t")
             
-        # Starts running the mission loop that continually checks data
-        try:
+            # Get current time to use as baseline
+            start = datetime.now()
+            delt = timedelta(seconds=0)
 
-            # Open file in append mode
-            with open(file_name, 'a+', newline='') as write_obj:
-                # Write column titles to csv
-                csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (%)"]
-                self.append_list_as_row(write_obj, csvTitles)
-
-                # Get current time to use as baseline
-                start = datetime.now()
-                delt = timedelta(seconds=0)
-
-                while ((delt.seconds / 60) < total_time):
-                    # Only record time since start (starts at 0, incrments)
-                    now = datetime.now()
-                    delt = now - start
-
-                    # Create list of all data for csv
-                    # [time, temp, throttle, arm freq, core freq, sdram_c voltage, sdram_i voltage, sdram_p voltage]
-                    csvList = [str(delt.seconds) + "." + str(round(delt.microseconds / 1000)), self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle()]
-                    csvList.extend(self.read_frequency())
-                    csvList.extend(self.read_voltage())
-                    csvList.extend(self.read_memory())
-
-                    # Write list to csv
-                    self.append_list_as_row(write_obj, csvList)
-
-                    # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
-                    time.sleep(0.1)
-
-        # Stop logging on keyboard interrupt
-        except KeyboardInterrupt:
-            print("Stopping logging due to keyboard interrupt") #ctrl-c
+            # Only run for specified time
+            while ((delt.seconds / 60) < total_time):
+                sys.stdout.write("\r{}\t{}\t{}\t{}\t{}\t{}\t{}\t".format(self.read_usb(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
+                sys.stdout.flush()
+                # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
+                time.sleep(0.1)
 
     ############### Deprecated run loop for printing but may be used later by driver file
 
