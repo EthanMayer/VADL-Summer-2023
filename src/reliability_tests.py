@@ -188,6 +188,8 @@ class reliability_tests:
 
                     # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
                     time.sleep(0.1)
+
+        # Stop logging on keyboard interrupt
         except KeyboardInterrupt:
             print("Stopping logging due to keyboard interrupt") #ctrl-c
 

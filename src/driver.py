@@ -31,6 +31,13 @@ args = parser.parse_args()
 # Create the test object
 tests = reliability_tests.reliability_tests()
 
-stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"])
+# If specified, run the stress shell command as a parallel subprocess
+if args.verbose:
+    stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"])
 
+# Start the tests for the specified time
 tests.start_tests(args.time)
+
+# If running, stop stressing when tests finish
+if args.verbose:
+    stress_proc.kill()
