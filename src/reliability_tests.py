@@ -199,7 +199,7 @@ class reliability_tests:
                 time.sleep(0.2) # Hack to make the stress command print before this information
 
                 print("===============Reliability Tests===============")
-                print("USB Status\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\tCPU Frequency (hz)\tCore Frequency (hz)\tCPU Voltage (V)\t")
+                print("USBs Connected\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\t\t[CPU Frequency (hz), Core Frequency (hz)]\tCPU Voltage (v)\t")
                 
                 # Get current time to use as baseline
                 start = datetime.now()
@@ -207,7 +207,7 @@ class reliability_tests:
 
                 # Only run for specified time
                 while ((delt.seconds / 60) < total_time):
-                    sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t{}".format(self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
+                    sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t\t{}".format(bool(self.read_usb()), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
                     sys.stdout.flush()
 
                     # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
