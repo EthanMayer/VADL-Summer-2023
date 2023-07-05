@@ -7,11 +7,17 @@ driver.py
 Copyright 2023. All rights reserved.
 '''
 
+# Library imports
 import argparse
-import time
-from datetime import datetime
-import reliability_tests
 import subprocess
+import os
+
+# Reliability tests code import
+import reliability_tests
+
+# Script must be run using sudo, check for it
+if os.geteuid() != 0:
+    exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo' in front. Exiting.")
 
 # Handle command-line arguments
 parser = argparse.ArgumentParser(prog = "Reliability Tests", description = "This program is designed to run tests on the reliability of payload electromechanical systems.")

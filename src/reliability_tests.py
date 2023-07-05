@@ -7,7 +7,7 @@ reliability_tests.py
 Copyright 2023. All rights reserved.
 '''
 
-
+# Library imports
 import time
 from datetime import datetime, timedelta
 from csv import writer
@@ -196,9 +196,9 @@ class reliability_tests:
 
             # If in verbose mode, do not log and just print output (for observation)
             else:
-                time.sleep(0.2) # Hack to make the stress command print before this information
 
-                print("===============Reliability Tests===============")
+                print("===============Reliability Tests Verbose Mode===============")
+                time.sleep(0.2) # Hack to make the stress command print before this information
                 print("USBs Connected\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\t\t[CPU Frequency (hz), Core Frequency (hz)]\tCPU Voltage (v)\t")
                 
                 # Get current time to use as baseline
