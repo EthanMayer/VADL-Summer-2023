@@ -45,7 +45,7 @@ except Exception as e:
         stress_proc.kill()
 
     # Print exception that occurred
-    print("EXCEPTION: " + e)
+    print("\nEXCEPTION:\n" + e)
 
 # If running, stop stressing when tests finish
 if args.stress:
