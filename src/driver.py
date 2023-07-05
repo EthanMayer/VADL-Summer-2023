@@ -31,17 +31,21 @@ args = parser.parse_args()
 # Create the test object
 tests = reliability_tests.reliability_tests()
 
-# try:
-# If specified, run the stress shell command as a parallel subprocess
-if args.stress:
-    stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"], text = False)
+try:
+    # If specified, run the stress shell command as a parallel subprocess
+    if args.stress:
+        stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"], text = False)
 
-# Start tests with specified time and verbose mode
-tests.start_tests(args.time, args.verbose)
-# except:
-#     # If running, stop stressing when tests finish
-#     if args.stress:
-#         stress_proc.kill()
+    # Start tests with specified time and verbose mode
+    tests.start_tests(args.time, args.verbose)
+
+except Exception as e:
+    # If running, stop stressing when tests finish
+    if args.stress:
+        stress_proc.kill()
+
+    # Print exception that occurred
+    print("EXCEPTION: " + e)
 
 # If running, stop stressing when tests finish
 if args.stress:

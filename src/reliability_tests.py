@@ -152,18 +152,18 @@ class reliability_tests:
     # Starts test suite using functions above
     def start_tests(self, total_time, verbose):
 
-        # Log normally if not verbose mode
-        if not verbose:
+        # Capture all loops in try block for exception catching
+        try:
+                 
+            # Log normally if not verbose mode
+            if not verbose:
 
-            # Initialize CSV file for recording IMU data
-            if not os.path.exists("../data"):
-                os.makedirs("../data")
-            timestr = time.strftime("%Y%m%d-%H%M%S")
-            file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
-            open(file_name, 'w+', newline='')
-                
-            # Starts running the mission loop that continually checks data
-            try:
+                # Initialize CSV file for recording IMU data
+                if not os.path.exists("../data"):
+                    os.makedirs("../data")
+                timestr = time.strftime("%Y%m%d-%H%M%S")
+                file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
+                open(file_name, 'w+', newline='')
 
                 # Open file in append mode
                 with open(file_name, 'a+', newline='') as write_obj:
@@ -194,48 +194,29 @@ class reliability_tests:
                         # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
                         time.sleep(0.1)
 
-            # Stop logging on keyboard interrupt
-            except KeyboardInterrupt:
-                print("Stopping logging due to keyboard interrupt") #ctrl-c
+            # If in verbose mode, do not log and just print output (for observation)
+            else:
+                time.sleep(0.2) # Hack to make the stress command print before this information
 
-        # If in verbose mode, do not log and just print output (for observation)
-        else:
+                print("===============Reliability Tests===============")
+                print("USB Status\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\tCPU Frequency (hz)\tCore Frequency (hz)\tCPU Voltage (V)\t")
+                
+                # Get current time to use as baseline
+                start = datetime.now()
+                delt = timedelta(seconds=0)
 
-            time.sleep(0.2) # Hack to make the stress command print before this information
+                # Only run for specified time
+                while ((delt.seconds / 60) < total_time):
+                    sys.stdout.write("\r{}\t{}\t\t{}\t\t{}\t{}\t{}".format(self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
+                    sys.stdout.flush()
 
-            print("===============Reliability Tests===============")
-            print("USB Status\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\tCPU Frequency (hz)\tCore Frequency (hz)\tCPU Voltage (V)\t")
-            
-            # Get current time to use as baseline
-            start = datetime.now()
-            delt = timedelta(seconds=0)
+                    # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
+                    time.sleep(0.1)
 
-            # Only run for specified time
-            while ((delt.seconds / 60) < total_time):
-                sys.stdout.write("\r{}\t{}\t{}\t{}\t{}".format(self.read_usb(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
-                sys.stdout.flush()
+        # Stop logging on keyboard interrupt and gracefully exit
+        except KeyboardInterrupt:
+            print("Stopping logging due to keyboard interrupt") #ctrl-c
 
-                # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
-                time.sleep(0.1)
-
-    ############### Deprecated run loop for printing but may be used later by driver file
-
-    # # Get current time to use as baseline
-    # start = datetime.now()
-        
-    # # Run loop
-    # while True:
-    #     # Only record time since start (starts at 0, incrments)
-    #     now = datetime.now()
-    #     delt = now - start
-
-    #     print(str(delt.microseconds / 1000.0) + " READINGS:")
-
-    #     # Perform all sensor readings
-    #     read_temperature()
-    #     read_frequency()
-    #     read_voltage()
-    #     read_throttle()
-
-    #     # Sleep 1ms, but 34ms seems to be maximum frequency when just checking data
-    #     time.sleep(0.001)
+        # Print exception that occurred
+        except Exception as e:
+            print("EXCEPTION: " + e)
