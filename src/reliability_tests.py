@@ -89,12 +89,10 @@ class reliability_tests:
     # Reads USB device status
     # Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test
     def read_usb(self):
-        self.first
         str = popen("lsusb").read()
-        self.expected_usb
 
         # First time, check current USB devices and record them
-        if not first:
+        if not self.first:
             first = True
             expected_usb = str
             return 1
@@ -214,7 +212,7 @@ class reliability_tests:
             while ((delt.seconds / 60) < total_time):
                 sys.stdout.write("\r{}\t{}\t{}\t{}\t{}\t{}\t{}\t".format(self.read_usb(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
                 sys.stdout.flush()
-                
+
                 # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
                 time.sleep(0.1)
 
