@@ -93,14 +93,14 @@ class reliability_tests:
 
         # First time, check current USB devices and record them
         if not self.first:
-            first = True
-            expected_usb = str
+            self.first = True
+            self.expected_usb = str
             return 1
         
         # Every other time, check current USB devices against original recording
         else:
             # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
-            return int("".join(str.split()) == "".join(expected_usb.split()))
+            return int("".join(str.split()) == "".join(self.expected_usb.split()))
 
         ###### UNUSED, may use later?
         # Expected USB devices to be listed as seen in lab testing
@@ -207,7 +207,7 @@ class reliability_tests:
 
                 # Only run for specified time
                 while ((delt.seconds / 60) < total_time):
-                    sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t\t{}".format(bool(self.read_usb()), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
+                    sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}".format(bool(self.read_usb()), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
                     sys.stdout.flush()
 
                     # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
