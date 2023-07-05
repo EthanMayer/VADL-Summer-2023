@@ -29,7 +29,7 @@ class reliability_tests:
 
     # Reads CPU die temperature from cmdline vcgencmd, accurate due to firmware-level request
     # temp=##.#'C where # = some number, desired result always 4 characters long
-    def read_temperature():
+    def read_temperature(self):
         str = popen("vcgencmd measure_temp").read()
         temp = str[str.find("=")+1:-3] # Trim to cut off temp= and 'C
         #print(str)
@@ -37,7 +37,7 @@ class reliability_tests:
 
     # Reads CPU frequency from cmdline vcgencmd, accurate due to firmware-level request
     # frequency(48)=######### where # = some number, desired result can be between 9-10 characters long
-    def read_frequency():
+    def read_frequency(self):
         # ARM frequency is frequency of the processor
         str = popen("vcgencmd measure_clock arm").read()
         freq_arm = str[str.find("=")+1:-1] # trim to cut off frequency(48)=
@@ -52,7 +52,7 @@ class reliability_tests:
 
     # Reads Pi voltage from cmdline vcgencmd, accurate due to firmware-level request
     # volt=#.####V where # = some number, desired result always 4 characters long
-    def read_voltage(verbose):
+    def read_voltage(self, verbose):
         # Core voltage is voltage of CPU
         str = popen("vcgencmd measure_volts core").read()
         voltage_core = str[str.find("=")+1:-2] # trim to cut off volt= and V
@@ -80,7 +80,7 @@ class reliability_tests:
 
     # Reads throttle status from cmdline vcgencmd, accurate due to firmware-level request
     # throttled=#x# where # = some number (but little x always there because Hex), desired result always 3 characters long
-    def read_throttle():
+    def read_throttle(self):
         str = popen("vcgencmd get_throttled").read()
         throttle = str[str.find("x")+1:-1] # trim to cut off throttled=#x
         # print(str)
@@ -117,13 +117,13 @@ class reliability_tests:
         #########
 
     # Reads CPU utilization percentage
-    def read_utilization():
+    def read_utilization(self):
         # Get cpu statistics
         cpu = str(psutil.cpu_percent()) + '%'
         return cpu
 
     # Reads RAM information
-    def read_memory():
+    def read_memory(self):
         memory = psutil.virtual_memory()
         # Convert Bytes to MB (Bytes -> KB -> MB)
         available = round(memory.available/1024.0/1024.0,1)
@@ -133,7 +133,7 @@ class reliability_tests:
 
     # UNUSED
     # Reads disk usage information
-    def read_disk():
+    def read_disk(self):
         # Calculate disk information
         disk = psutil.disk_usage('/')
         # Convert Bytes to GB (Bytes -> KB -> MB -> GB)
