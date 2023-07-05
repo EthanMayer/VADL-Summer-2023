@@ -52,7 +52,7 @@ class reliability_tests:
 
     # Reads Pi voltage from cmdline vcgencmd, accurate due to firmware-level request
     # volt=#.####V where # = some number, desired result always 4 characters long
-    def read_voltage(self, verbose):
+    def read_voltage(self, verbose = False):
         # Core voltage is voltage of CPU
         str = popen("vcgencmd measure_volts core").read()
         voltage_core = str[str.find("=")+1:-2] # trim to cut off volt= and V
@@ -226,4 +226,4 @@ class reliability_tests:
 
         # Print exception that occurred
         except Exception as e:
-            print("\nEXCEPTION:\n" + e)
+            print("\nEXCEPTION:\n" + str(e))
