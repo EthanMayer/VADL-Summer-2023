@@ -207,7 +207,7 @@ class reliability_tests:
 
                 # Only run for specified time
                 while ((delt.seconds / 60) < total_time):
-                    sys.stdout.write("\r{}\t{}\t\t{}\t\t{}\t{}\t{}".format(self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
+                    sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t{}".format(self.read_usb(), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
                     sys.stdout.flush()
 
                     # Sleep 100ms, but 80ms seems to be maximum frequency when checking data + writing to csv
