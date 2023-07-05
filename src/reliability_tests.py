@@ -207,6 +207,11 @@ class reliability_tests:
 
                 # Only run for specified time
                 while ((delt.seconds / 60) < total_time):
+                    # Only record time since start (starts at 0, incrments)
+                    now = datetime.now()
+                    delt = now - start
+
+                    # Print information out on the same line to not spam the console
                     sys.stdout.write("\r{}\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}\t\t\t{}".format(bool(self.read_usb()), self.read_temperature(), self.read_utilization(), self.read_throttle(), self.read_frequency(), self.read_voltage(verbose)))
                     sys.stdout.flush()
 
