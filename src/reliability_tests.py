@@ -150,7 +150,7 @@ class reliability_tests:
         csv_writer.writerow(list_of_elem)
 
     # Starts test suite using functions above
-    def start_tests(self, total_time, verbose):
+    def start_tests(self, total_time, log_name, verbose):
 
         # Capture all loops in try block for exception catching
         try:
@@ -162,7 +162,13 @@ class reliability_tests:
                 if not os.path.exists("../data"):
                     os.makedirs("../data")
                 timestr = time.strftime("%Y%m%d-%H%M%S")
-                file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
+
+                # If logfile name is specified, name it
+                if log_name is None:
+                    file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
+                else:
+                    file_name = "../data/LOG_" + timestr + "." + log_name + ".csv"
+                    
                 open(file_name, 'w+', newline='')
 
                 # Open file in append mode
