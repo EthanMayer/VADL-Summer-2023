@@ -201,8 +201,8 @@ class reliability_tests:
         # If in verbose mode, do not log and just print output (for observation)
         else:
 
-            time.sleep(0.5) # Hack to make the stress command print before this information
-            
+            time.sleep(0.2) # Hack to make the stress command print before this information
+
             print("===============Reliability Tests===============")
             print("USB Status\tCPU Temperature ('C)\tCPU Utilization (%)\tThrottle Status\tCPU Frequency (hz)\tCore Frequency (hz)\tCPU Voltage (V)\t")
             
