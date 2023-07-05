@@ -143,7 +143,7 @@ class reliability_tests:
         return [free, percent]
 
     # Append a list as a row to the CSV
-    def append_list_as_row(write_obj, list_of_elem):
+    def append_list_as_row(self, write_obj, list_of_elem):
         # Create a writer object from csv module
         csv_writer = writer(write_obj)
         # Add contents of list as last row in the csv file
@@ -170,6 +170,8 @@ class reliability_tests:
                     # Write column titles to csv
                     csvTitles = ["Time (s)", "USB Status", "CPU Temperature ('C)", "CPU Utilization (%)", "Throttle Status", "CPU Frequency (hz)", "Core Frequency (hz)", "CPU Voltage (V)", "Memory Controller Voltage (V)", "Memory I/O Voltage (V)", "Memory Chip Voltage (V)", "Memory Free (Mb)", "Memory Free Percent (%)"]
                     self.append_list_as_row(write_obj, csvTitles)
+
+                    print("Logging. . .")
 
                     # Get current time to use as baseline
                     start = datetime.now()
