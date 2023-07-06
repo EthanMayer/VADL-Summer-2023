@@ -80,8 +80,7 @@ class reliability_tests:
     def read_throttle(self):
         string = popen("vcgencmd get_throttled").read()
         throttle = str[string.find("x")+1:-1] # trim to cut off throttled=#x
-        # return str(int(throttle, 16))
-        return throttle
+        return str(int(throttle, 16))
 
     # Reads USB device status
     # Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test
@@ -214,6 +213,6 @@ class reliability_tests:
         except KeyboardInterrupt:
             print("\nStopping logging due to keyboard interrupt") #ctrl-c
 
-        # Print exception that occurred
-        except Exception as e:
-            print("\nTEST EXCEPTION:\n" + str(e))
+        # # Print exception that occurred
+        # except Exception as e:
+        #     print("\nTEST EXCEPTION:\n" + str(e))
