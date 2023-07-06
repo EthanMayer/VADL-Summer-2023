@@ -47,8 +47,8 @@ print("Running git pull to ensure test software is up-to-date. . .")
 git_status = os.popen("git pull")#.read()
 # if git_status.find("id_ed25519") != -1:
 #     os.popen("156157")
-# elif git_status.find("denied") != -1:
-#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
+if git_status.find("denied") != -1:
+    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
@@ -94,6 +94,8 @@ else:
 git_status = os.popen("git push")#.read()
 # if git_status.find("id_ed25519"):
 #     os.popen("156157")
+if git_status.find("denied") != -1:
+    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Restart automatically after the test finishes in order to clear throttle status register
 print("Rebooting now to ensure throttle register is cleared. Goodbye.")
