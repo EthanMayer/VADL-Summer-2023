@@ -30,20 +30,23 @@ class reliability_tests:
     # Reads CPU die temperature from cmdline vcgencmd, accurate due to firmware-level request
     # temp=##.#'C where # = some number, desired result always 4 characters long
     def read_temperature(self):
-        string = popen("vcgencmd measure_temp").read()
-        temp = str[string.find("=")+1:-3] # Trim to cut off temp= and 'C
+        str = popen("vcgencmd measure_temp").read()
+        temp = str[str.find("=")+1:-3] # Trim to cut off temp= and 'C
+        #print(str)
         return temp
 
     # Reads CPU frequency from cmdline vcgencmd, accurate due to firmware-level request
     # frequency(48)=######### where # = some number, desired result can be between 9-10 characters long
     def read_frequency(self):
         # ARM frequency is frequency of the processor
-        string = popen("vcgencmd measure_clock arm").read()
-        freq_arm = str[string.find("=")+1:-1] # trim to cut off frequency(48)=
+        str = popen("vcgencmd measure_clock arm").read()
+        freq_arm = str[str.find("=")+1:-1] # trim to cut off frequency(48)=
+        # print(str)
 
         # Core frequency is frequency of the VPU/firmware/buses for peripherals
-        string = popen("vcgencmd measure_clock core").read()
-        freq_core = str[string.find("=")+1:-1] # trim to cut off frequency(48)=
+        str = popen("vcgencmd measure_clock core").read()
+        freq_core = str[str.find("=")+1:-1] # trim to cut off frequency(48)=
+        # print(str)
 
         return [freq_arm, freq_core]
 
@@ -51,8 +54,8 @@ class reliability_tests:
     # volt=#.####V where # = some number, desired result always 4 characters long
     def read_voltage(self, verbose = False):
         # Core voltage is voltage of CPU
-        string = popen("vcgencmd measure_volts core").read()
-        voltage_core = str[string.find("=")+1:-2] # trim to cut off volt= and V
+        str = popen("vcgencmd measure_volts core").read()
+        voltage_core = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
         # If in verbose mode, only check and return voltage_core
         if verbose:
@@ -62,41 +65,42 @@ class reliability_tests:
         else:
 
             # sdram_c voltage is voltage of memory controller
-            string = popen("vcgencmd measure_volts sdram_c").read()
-            voltage_sdramc = str[string.find("=")+1:-2] # trim to cut off volt= and V
+            str = popen("vcgencmd measure_volts sdram_c").read()
+            voltage_sdramc = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
             # sdram_i voltage is voltage of memory I/O
-            string = popen("vcgencmd measure_volts sdram_i").read()
-            voltage_sdrami = str[string.find("=")+1:-2] # trim to cut off volt= and V
+            str = popen("vcgencmd measure_volts sdram_i").read()
+            voltage_sdrami = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
             # sdram_p voltage is voltage of physical memory
-            string = popen("vcgencmd measure_volts sdram_p").read()
-            voltage_sdramp = str[string.find("=")+1:-2] # trim to cut off volt= and V
+            str = popen("vcgencmd measure_volts sdram_p").read()
+            voltage_sdramp = str[str.find("=")+1:-2] # trim to cut off volt= and V
 
             return [voltage_core, voltage_sdramc, voltage_sdrami, voltage_sdramp]
 
     # Reads throttle status from cmdline vcgencmd, accurate due to firmware-level request
     # throttled=#x# where # = some number (but little x always there because Hex), desired result always 3 characters long
     def read_throttle(self):
-        string = popen("vcgencmd get_throttled").read()
-        throttle = str[string.find("x")+1:-1] # trim to cut off throttled=#x
-        return str(int(throttle, 16))
+        str = popen("vcgencmd get_throttled").read()
+        throttle = str[str.find("x")+1:-1] # trim to cut off throttled=#x
+        # return str(int(bin(int(throttle, 16)), 2)) # Intermediate conversion to binary to account for both big/little endian
+        return throttle
 
     # Reads USB device status
     # Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test
     def read_usb(self):
-        string = popen("lsusb").read()
+        str = popen("lsusb").read()
 
         # First time, check current USB devices and record them
         if not self.first:
             self.first = True
-            self.expected_usb = string
+            self.expected_usb = str
             return 1
         
         # Every other time, check current USB devices against original recording
         else:
             # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
-            return int("".join(string.split()) == "".join(self.expected_usb.split()))
+            return int("".join(str.split()) == "".join(self.expected_usb.split()))
 
     # Reads CPU utilization percentage
     def read_utilization(self):
@@ -213,6 +217,6 @@ class reliability_tests:
         except KeyboardInterrupt:
             print("\nStopping logging due to keyboard interrupt") #ctrl-c
 
-            # # Print exception that occurred
-            # except Exception as e:
-            #     print("\nTEST EXCEPTION:\n" + str(e))
+        # Print exception that occurred
+        # except Exception as e:
+        #     print("\nTEST EXCEPTION:\n" + str(e))
