@@ -12,6 +12,7 @@ import argparse
 import subprocess
 import os
 import time
+import git
 
 # Reliability tests code import
 import reliability_tests
@@ -43,17 +44,21 @@ if args.verbose and args.name is not None:
 
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
-git_status = os.popen("eval `ssh-agent -s`")
-git_status = os.popen("ssh-add").read()
-print(git_status)
-if git_status.find("passphrase") != -1:
-    os.popen("156157")
-print("Running git pull to ensure test software is up-to-date. . .")
-git_status = os.popen("git pull").read()
-# if git_status.find("id_ed25519") != -1:
+
+# r = git.Repo('.')
+
+# git_status = os.popen("eval `ssh-agent -s`")
+# git_status = os.popen("ssh-add").read()
+# print(git_status)
+# if git_status.find("passphrase") != -1:
 #     os.popen("156157")
-if git_status.find("denied") != -1:
-    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
+# print("Running git pull to ensure test software is up-to-date. . .")
+# os.popen("git config --local user.email ethan.h.mayer@vanderbilt.edu")
+# git_status = os.popen("git pull").read()
+# # if git_status.find("id_ed25519") != -1:
+# #     os.popen("156157")
+# if git_status.find("denied") != -1:
+#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
@@ -90,18 +95,18 @@ if args.stress:
 
 # Committing and uploading data automatically
 print("===============Post-Test===============")
-print("Running git commit and git push to ensure data is uploaded. . .")
-os.popen("git add -A")
-if args.name:
-    os.popen("git commit -m \"Pi test data - " + args.name + "\"")
-else:
-    os.popen("git commit -m \"Pi test data\"")
-git_status = os.popen("git push").read()
-# if git_status.find("id_ed25519"):
-#     os.popen("156157")
-if git_status.find("denied") != -1:
-    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
+# print("Running git commit and git push to ensure data is uploaded. . .")
+# os.popen("git add -A")
+# if args.name:
+#     os.popen("git commit -m \"Pi test data - " + args.name + "\"")
+# else:
+#     os.popen("git commit -m \"Pi test data\"")
+# git_status = os.popen("git push").read()
+# # if git_status.find("id_ed25519"):
+# #     os.popen("156157")
+# if git_status.find("denied") != -1:
+#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Restart automatically after the test finishes in order to clear throttle status register
 print("Rebooting now to ensure throttle register is cleared. Goodbye.")
-#os.popen("sudo reboot")
+os.popen("sudo reboot")
