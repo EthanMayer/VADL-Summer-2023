@@ -45,19 +45,18 @@ if args.verbose and args.name is not None:
 print("===============Pre-Test===============")
 print("Running git pull to ensure test software is up-to-date. . .")
 git_status = os.popen("git pull").read()
-time.sleep(0.5)
-if git_status.find("id_ed25519"):
+if git_status.find("id_ed25519") != -1:
     os.popen("156157")
-elif git_status.find("denied"):
+elif git_status.find("denied") != -1:
     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
-print("Specified total length of tests:\t" + str(args.time))
+print("Specified total length of tests:\t" + str(args.time) + " minute")
 if args.name is not None:
     print("Specified name of log file (printed after file timestamp):\t" + args.name)
-print("Stress the CPU, I/O, and Memory to 100%%:\t" + args.stress)
-print("Run in verbose mode and print data to terminal instead of logfile\t" + args.verbose)
+print("Stress the CPU, I/O, and Memory to 100%%:\t" + str(args.stress))
+print("Run in verbose mode and print data to terminal instead of logfile:\t" + str(args.verbose))
 
 # Create the test object
 tests = reliability_tests.reliability_tests()
