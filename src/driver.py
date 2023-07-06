@@ -44,7 +44,7 @@ if args.verbose and args.name is not None:
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
 print("Running git pull to ensure test software is up-to-date. . .")
-git_status = os.popen("git pull")#.read()
+git_status = os.popen("git pull").read()
 # if git_status.find("id_ed25519") != -1:
 #     os.popen("156157")
 if git_status.find("denied") != -1:
@@ -91,7 +91,7 @@ if args.name:
     os.popen("git commit -m \"Pi test data - " + args.name + "\"")
 else:
     os.popen("git commit -m \"Pi test data\"")
-git_status = os.popen("git push")#.read()
+git_status = os.popen("git push").read()
 # if git_status.find("id_ed25519"):
 #     os.popen("156157")
 if git_status.find("denied") != -1:
