@@ -11,6 +11,7 @@ Copyright 2023. All rights reserved.
 import argparse
 import subprocess
 import os
+import time
 
 # Reliability tests code import
 import reliability_tests
@@ -44,8 +45,11 @@ if args.verbose and args.name is not None:
 print("===============Pre-Test===============")
 print("Running git pull to ensure test software is up-to-date. . .")
 git_status = os.popen("git pull").read()
+time.sleep(0.5)
 if git_status.find("id_ed25519"):
     os.popen("156157")
+elif git_status.find("denied"):
+    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
