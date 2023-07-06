@@ -80,7 +80,7 @@ class reliability_tests:
     def read_throttle(self):
         string = popen("vcgencmd get_throttled").read()
         throttle = str[string.find("x")+1:-1] # trim to cut off throttled=#x
-        return str(int(bin(int(throttle, 16)), 2)) # Intermediate conversion to binary to account for both big/little endian
+        return str(int(throttle, 16))
 
     # Reads USB device status
     # Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test

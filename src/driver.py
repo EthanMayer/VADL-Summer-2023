@@ -109,4 +109,4 @@ print("===============Post-Test===============")
 
 # Restart automatically after the test finishes in order to clear throttle status register
 print("Rebooting now to ensure throttle register is cleared. Goodbye.")
-os.popen("sudo reboot")
+# os.popen("sudo reboot")
