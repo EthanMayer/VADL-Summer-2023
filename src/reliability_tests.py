@@ -83,8 +83,7 @@ class reliability_tests:
     def read_throttle(self):
         str = popen("vcgencmd get_throttled").read()
         throttle = str[str.find("x")+1:-1] # trim to cut off throttled=#x
-        # print(str)
-        return str(int(throttle, 16))
+        return str(int(bin(int(throttle, 16)), 2)) # Intermediate conversion to binary to account for both big/little endian
 
     # Reads USB device status
     # Custom check, this checks and stores all usb devices at the start of the test and checks if it changes throughout the test
@@ -101,20 +100,6 @@ class reliability_tests:
         else:
             # Ensure proper equality test by removing all forms of whitespace (spaces, tabs, indents, newlines, etc.)
             return int("".join(str.split()) == "".join(self.expected_usb.split()))
-
-        ###### UNUSED, may use later?
-        # Expected USB devices to be listed as seen in lab testing
-    #     expected_usb = '''Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-    # Bus 001 Device 025: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
-    # Bus 001 Device 024: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
-    # Bus 001 Device 023: ID 0c45:6366 Microdia Webcam Vitade AF
-    # Bus 001 Device 022: ID 2109:2817 VIA Labs, Inc. USB2.0 Hub
-    # Bus 001 Device 021: ID 0c45:6366 Microdia Webcam Vitade AF
-    # Bus 001 Device 015: ID 0403:6001 Future Technology Devices International, Ltd FT232 Serial (UART) IC
-    # Bus 001 Device 003: ID 0c45:6366 Microdia Webcam Vitade AF
-    # Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
-    # Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub'''
-        #########
 
     # Reads CPU utilization percentage
     def read_utilization(self):

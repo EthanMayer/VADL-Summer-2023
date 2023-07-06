@@ -38,7 +38,22 @@ parser.add_argument("-V", "--verbose", help = "Whether to print data to the term
 args = parser.parse_args()
 
 if args.verbose and args.name is not None:
-    exit("You cannot specify -V (verbose mode) and -N (name) because no log file will be created in verbose mode. Exiting.")
+    exit("You cannot specify both -V (verbose mode) and -N (name) because no log file will be created in verbose mode. Exiting.")
+
+# Ensure software is up to date automatically
+print("===============Pre-Test===============")
+print("Running git pull to ensure test software is up-to-date. . .")
+git_status = os.popen("git pull").read()
+if git_status.find("id_ed25519"):
+    os.popen("156157")
+
+# Print all parameters back so the user knows they are correct
+print("===============Test Information===============")
+print("Specified total length of tests:\t" + str(args.time))
+if args.name is not None:
+    print("Specified name of log file (printed after file timestamp):\t" + args.name)
+print("Stress the CPU, I/O, and Memory to 100%%:\t" + args.stress)
+print("Run in verbose mode and print data to terminal instead of logfile\t" + args.verbose)
 
 # Create the test object
 tests = reliability_tests.reliability_tests()
@@ -59,6 +74,21 @@ except Exception as e:
     # Print exception that occurred
     print("\nEXCEPTION:\n" + str(e))
 
+    exit()
+
 # If running, stop stressing when tests finish
 if args.stress:
     stress_proc.kill()
+
+# Committing and uploading data automatically
+print("===============Post-Test===============")
+print("Running git commit and git push to ensure data is uploaded. . .")
+os.popen("git add -A")
+os.popen("git commit -m \"Pi test data - " + args.name + "\"")
+git_status = os.popen("git push").read()
+if git_status.find("id_ed25519"):
+    os.popen("156157")
+
+# Restart automatically after the test finishes in order to clear throttle status register
+print("Rebooting now to ensure throttle register is cleared. Goodbye.")
+os.popen("sudo reboot")
