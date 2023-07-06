@@ -43,8 +43,9 @@ if args.verbose and args.name is not None:
 
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
-os.system("ssh-add")
-os.system("156157")
+os.popen("eval `ssh-agent -s`")
+os.popen("ssh-add")
+os.popen("156157")
 print("Running git pull to ensure test software is up-to-date. . .")
 git_status = os.popen("git pull").read()
 # if git_status.find("id_ed25519") != -1:
