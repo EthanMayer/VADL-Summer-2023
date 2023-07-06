@@ -218,4 +218,4 @@ class reliability_tests:
 
         # Print exception that occurred
         except Exception as e:
-            print("\nEXCEPTION:\n" + str(e))
+            print("\nTEST EXCEPTION:\n" + str(e))

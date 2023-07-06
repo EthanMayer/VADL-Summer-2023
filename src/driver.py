@@ -64,7 +64,7 @@ print("===============Pre-Test===============")
 print("===============Test Information===============")
 print("Specified total length of tests:\t\t\t\t\t" + str(args.time) + " minute")
 if args.name is not None:
-    print("Specified name of log file (printed after file timestamp):\t\t\t" + args.name)
+    print("Specified name of log file (printed after file timestamp):\t\t" + args.name)
 print("Stress the CPU, I/O, and Memory to 100%:\t\t\t\t" + str(args.stress))
 print("Run in verbose mode and print data to terminal instead of logfile:\t" + str(args.verbose))
 
@@ -85,7 +85,7 @@ except Exception as e:
         stress_proc.kill()
 
     # Print exception that occurred
-    print("\nEXCEPTION:\n" + str(e))
+    print("\nDRIVER EXCEPTION:\n" + str(e))
 
     exit()
 
