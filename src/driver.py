@@ -43,6 +43,8 @@ if args.verbose and args.name is not None:
 
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
+os.popen("ssh-add")
+os.popen("156157")
 print("Running git pull to ensure test software is up-to-date. . .")
 git_status = os.popen("git pull").read()
 # if git_status.find("id_ed25519") != -1:
@@ -52,7 +54,7 @@ if git_status.find("denied") != -1:
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
-print("Specified total length of tests:\t\t\t\t" + str(args.time) + " minute")
+print("Specified total length of tests:\t\t\t\t\t" + str(args.time) + " minute")
 if args.name is not None:
     print("Specified name of log file (printed after file timestamp):\t\t\t" + args.name)
 print("Stress the CPU, I/O, and Memory to 100%:\t\t\t\t" + str(args.stress))
