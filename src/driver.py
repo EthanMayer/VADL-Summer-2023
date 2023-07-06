@@ -71,23 +71,23 @@ print("Run in verbose mode and print data to terminal instead of logfile:\t" + s
 # Create the test object
 tests = reliability_tests.reliability_tests()
 
-try:
-    # If specified, run the stress shell command as a parallel subprocess
-    if args.stress:
-        stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"], text = False)
+# try:
+# If specified, run the stress shell command as a parallel subprocess
+if args.stress:
+    stress_proc = subprocess.Popen(["sudo", "stress", "--cpu", "4", "--io", "4", "--vm", "4"], text = False)
 
-    # Start tests with specified time and verbose mode
-    tests.start_tests(args.time, args.name, args.verbose)
+# Start tests with specified time and verbose mode
+tests.start_tests(args.time, args.name, args.verbose)
 
-except Exception as e:
-    # If running, stop stressing when tests finish
-    if args.stress:
-        stress_proc.kill()
+# except Exception as e:
+#     # If running, stop stressing when tests finish
+#     if args.stress:
+#         stress_proc.kill()
 
-    # Print exception that occurred
-    print("\nDRIVER EXCEPTION:\n" + str(e))
+#     # Print exception that occurred
+#     print("\nDRIVER EXCEPTION:\n" + str(e))
 
-    exit()
+#     exit()
 
 # If running, stop stressing when tests finish
 if args.stress:
