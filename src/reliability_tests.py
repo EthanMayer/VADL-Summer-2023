@@ -167,8 +167,9 @@ class reliability_tests:
                 if log_name is None:
                     file_name = "../data/LOG_" + timestr + ".PiReadings.csv"
                 else:
+                    log_name = "_".join(log_name.split())
                     file_name = "../data/LOG_" + timestr + "." + log_name + ".csv"
-                    
+
                 open(file_name, 'w+', newline='')
 
                 # Open file in append mode
