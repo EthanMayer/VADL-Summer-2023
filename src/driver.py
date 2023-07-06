@@ -44,18 +44,18 @@ if args.verbose and args.name is not None:
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
 print("Running git pull to ensure test software is up-to-date. . .")
-git_status = os.popen("git pull").read()
-if git_status.find("id_ed25519") != -1:
-    os.popen("156157")
-elif git_status.find("denied") != -1:
-    exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
+git_status = os.popen("git pull")#.read()
+# if git_status.find("id_ed25519") != -1:
+#     os.popen("156157")
+# elif git_status.find("denied") != -1:
+#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
-print("Specified total length of tests:\t" + str(args.time) + " minute")
+print("Specified total length of tests:\t\t\t\t" + str(args.time) + " minute")
 if args.name is not None:
-    print("Specified name of log file (printed after file timestamp):\t" + args.name)
-print("Stress the CPU, I/O, and Memory to 100%%:\t" + str(args.stress))
+    print("Specified name of log file (printed after file timestamp):\t\t\t" + args.name)
+print("Stress the CPU, I/O, and Memory to 100%:\t\t\t\t" + str(args.stress))
 print("Run in verbose mode and print data to terminal instead of logfile:\t" + str(args.verbose))
 
 # Create the test object
@@ -87,10 +87,13 @@ if args.stress:
 print("===============Post-Test===============")
 print("Running git commit and git push to ensure data is uploaded. . .")
 os.popen("git add -A")
-os.popen("git commit -m \"Pi test data - " + args.name + "\"")
-git_status = os.popen("git push").read()
-if git_status.find("id_ed25519"):
-    os.popen("156157")
+if args.name:
+    os.popen("git commit -m \"Pi test data - " + args.name + "\"")
+else:
+    os.popen("git commit -m \"Pi test data\"")
+git_status = os.popen("git push")#.read()
+# if git_status.find("id_ed25519"):
+#     os.popen("156157")
 
 # Restart automatically after the test finishes in order to clear throttle status register
 print("Rebooting now to ensure throttle register is cleared. Goodbye.")
