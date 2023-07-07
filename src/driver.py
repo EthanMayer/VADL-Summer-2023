@@ -50,6 +50,8 @@ git_ssh_cmd = "ssh -i %s" % git_ssh_identity_file
 repo = git.Repo('../.')
 with repo.git.custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
     repo.git.pull()
+    time.sleep(0.2)
+    os.popen("156157")
 
 # git_status = os.popen("eval `ssh-agent -s`")
 # git_status = os.popen("ssh-add").read()
