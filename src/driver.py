@@ -45,8 +45,8 @@ if args.verbose and args.name is not None:
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
 print("Running git pull to ensure test software is up-to-date. . .")
-git_ssh_identity_file = os.path.expanduser('~/.ssh/id_ed25519')
-git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
+git_ssh_identity_file = "/home/vadl/.ssh/id_ed25519"
+git_ssh_cmd = "ssh -i %s" % git_ssh_identity_file
 repo = git.Repo('../.')
 with repo.git.custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
     repo.git.pull()
