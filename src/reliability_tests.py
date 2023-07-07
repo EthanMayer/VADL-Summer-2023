@@ -218,5 +218,5 @@ class reliability_tests:
             print("\nStopping logging due to keyboard interrupt") #ctrl-c
 
         # Print exception that occurred
-        # except Exception as e:
-        #     print("\nTEST EXCEPTION:\n" + str(e))
+        except Exception as e:
+            print("\nTEST EXCEPTION:\n" + str(e))
