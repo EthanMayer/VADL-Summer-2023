@@ -50,21 +50,6 @@ git_ssh_cmd = "ssh -i %s" % git_ssh_identity_file
 repo = git.Repo('../.')
 with repo.git.custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
     repo.git.pull()
-    time.sleep(0.2)
-    os.popen("156157")
-
-# git_status = os.popen("eval `ssh-agent -s`")
-# git_status = os.popen("ssh-add").read()
-# print(git_status)
-# if git_status.find("passphrase") != -1:
-#     os.popen("156157")
-
-# os.popen("git config --local user.email ethan.h.mayer@vanderbilt.edu")
-# git_status = os.popen("git pull").read()
-# # if git_status.find("id_ed25519") != -1:
-# #     os.popen("156157")
-# if git_status.find("denied") != -1:
-#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
 
 # Print all parameters back so the user knows they are correct
 print("===============Test Information===============")
@@ -101,17 +86,15 @@ if args.stress:
 
 # Committing and uploading data automatically
 print("===============Post-Test===============")
-# print("Running git commit and git push to ensure data is uploaded. . .")
-# os.popen("git add -A")
-# if args.name:
-#     os.popen("git commit -m \"Pi test data - " + args.name + "\"")
-# else:
-#     os.popen("git commit -m \"Pi test data\"")
-# git_status = os.popen("git push").read()
-# # if git_status.find("id_ed25519"):
-# #     os.popen("156157")
-# if git_status.find("denied") != -1:
-#     exit("Github access denied. Please ensure you are pulling from the correct repository with the correct passphrase. Exiting.")
+if not args.verbose:
+    print("Running git commit and git push to ensure data is uploaded. . .")
+    with repo.git.custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+        repo.git.add(all = True)
+        if args.name:
+            repo.git.commit("-m", "Pi test data - " + args.name)
+        else:
+            repo.git.commit("-m", "Pi test data - ")
+        repo.git.push()
 
 # Restart automatically after the test finishes in order to clear throttle status register
 print("Rebooting now to ensure throttle register is cleared. Goodbye.")
