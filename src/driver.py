@@ -12,7 +12,7 @@ import argparse
 import subprocess
 import os
 import time
-# import git
+import git
 
 # Reliability tests code import
 import reliability_tests
@@ -44,15 +44,19 @@ if args.verbose and args.name is not None:
 
 # Ensure software is up to date automatically
 print("===============Pre-Test===============")
-
-# r = git.Repo('.')
+print("Running git pull to ensure test software is up-to-date. . .")
+git_ssh_identity_file = os.path.expanduser('~/.ssh/id_ed25519')
+git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
+repo = git.Repo('../.')
+with repo.git.custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+    repo.git.pull()
 
 # git_status = os.popen("eval `ssh-agent -s`")
 # git_status = os.popen("ssh-add").read()
 # print(git_status)
 # if git_status.find("passphrase") != -1:
 #     os.popen("156157")
-# print("Running git pull to ensure test software is up-to-date. . .")
+
 # os.popen("git config --local user.email ethan.h.mayer@vanderbilt.edu")
 # git_status = os.popen("git pull").read()
 # # if git_status.find("id_ed25519") != -1:
