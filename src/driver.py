@@ -12,7 +12,7 @@ import argparse
 import subprocess
 import os
 import time
-import gitpython as git
+import git
 
 # Reliability tests code import
 import reliability_tests
